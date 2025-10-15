@@ -218,6 +218,7 @@ int main() {
 其迭代次数比三分快，且复用节点能少一半常数，求凸函数时也比二分法正确。
 
 ```cpp
+const db gor=(sqrt(5)-1.0)/2.0;
 double solve() {
     db l=-1e5,r=1e5;
     bool kl=0,kr=0;
