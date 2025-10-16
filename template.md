@@ -28,19 +28,30 @@ void change(poly &a);
 void ntt(poly &a,int op);
 
 struct modInt {
-    int w;
-    modInt (int _w=0):w(_w%p) {}
-    inline modInt operator + (const modInt &a) const {
-        if(w+a.w>=p) return w+a.w-p;
-        else return w+a.w;
+    uint32_t w;
+    modInt (int _w=0) { 
+        int t = _w % p;
+        if (t < 0) t += p;
+        w = (uint32_t)t;
     }
-    inline modInt operator - (const modInt &a) const {
-        if(w-a.w<0) return w-a.w+p;
-        else return w-a.w;
+    inline modInt& operator+=(const modInt &a) {
+        uint32_t x = w + a.w;
+        if (x >= (uint32_t)p) x -= p;
+        w = x;
+        return *this;
     }
-    inline modInt operator * (const modInt &a) const {
-        return 1ll*w*a.w%p;
+    inline modInt& operator-=(const modInt &a) {
+        uint32_t x = (w >= a.w) ? (w - a.w) : (w + (uint32_t)p - a.w);
+        w = x;
+        return *this;
     }
+    inline modInt& operator*=(const modInt &a) {
+        w = (uint32_t)((uint64_t)w * a.w % p);
+        return *this;
+    }
+    friend inline modInt operator + (modInt a, const modInt &b) { a += b; return a; }
+    friend inline modInt operator - (modInt a, const modInt &b) { a -= b; return a; }
+    friend inline modInt operator * (modInt a, const modInt &b) { a *= b; return a; }
 };
 inline modInt qpow(modInt a,int b ) {
     modInt ans=1,base=a;
